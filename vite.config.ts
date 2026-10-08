@@ -1,33 +1,47 @@
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vitest/config';
-import adapter from '@sveltejs/adapter-static';
-import { sveltekit } from '@sveltejs/kit/vite';
-import { SPA_FALLBACK } from './src/lib/constants.ts';
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
+import { APP_DESCRIPTION, APP_NAME, LANG, THEME_COLORS } from './shared/constants/index.ts'
+
+const htmlConstants: Record<string, string> = {
+  APP_NAME,
+  APP_DESCRIPTION,
+  LANG,
+  THEME_LIGHT: THEME_COLORS.light,
+  THEME_DARK: THEME_COLORS.dark,
+}
 
 export default defineConfig({
-	plugins: [
-		tailwindcss(),
-		sveltekit({
-			compilerOptions: {
-				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
-				runes: ({ filename }) =>
-					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
-			},
-			adapter: adapter({ fallback: SPA_FALLBACK })
-		})
-	],
-	test: {
-		expect: { requireAssertions: true },
-		projects: [
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
-			}
-		]
-	}
-});
+  plugins: [
+    react(),
+    {
+      name: 'html-constants',
+      transformIndexHtml: { order: 'pre', handler: (html) => html.replace(/%(\w+)%/g, (match, key: string) => htmlConstants[key] ?? match) },
+    },
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: false,
+      pwaAssets: { config: true, injectThemeColor: false },
+      manifest: {
+        name: APP_NAME,
+        short_name: APP_NAME,
+        description: APP_DESCRIPTION,
+        theme_color: THEME_COLORS.light,
+        background_color: THEME_COLORS.light,
+        display: 'standalone',
+        start_url: '/',
+        scope: '/',
+        lang: LANG,
+      },
+      workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+      },
+    }),
+  ],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['src/test/setup.ts'],
+  },
+})

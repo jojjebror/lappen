@@ -1,27 +1,17 @@
-node_modules
+node_modules/
+dist/
+dev-dist/
+coverage/
 
-# Output
-.output
-.vercel
-.netlify
-.wrangler
-/.svelte-kit
-/build
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
 .env
 .env.*
 !.env.example
-!.env.test
 
-# Vite
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-
-# Firebase
-.firebase
+.firebase/
 .firebaserc
+
+*.log
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

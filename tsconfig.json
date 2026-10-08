@@ -1,9 +1,20 @@
 {
-	"extends": "$app/tsconfig",
-	"compilerOptions": {
-		"strict": true,
-		"types": ["$app/types", "node"]
-	},
-	"include": ["src", "vite.config.ts"],
-	"exclude": ["src/service-worker"]
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src", "shared", "vite.config.ts", "pwa-assets.config.ts"]
 }

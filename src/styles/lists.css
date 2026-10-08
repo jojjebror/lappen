@@ -1,0 +1,17 @@
+.group { margin-bottom: 16px; border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.group:empty { display: none; }
+.group li + li { box-shadow: inset 0 1px 0 var(--line); }
+.row { display: block; width: 100%; padding: 14px 16px; border: 0; background: none; text-align: left; }
+.row-link { font-weight: 500; }
+.create { display: flex; gap: 8px; }
+
+.list-head { display: flex; justify-content: space-between; align-items: center; }
+.back { color: var(--accent); font-weight: 500; }
+.back::before { content: '‹ '; }
+
+.suggestions { display: flex; flex-wrap: wrap; gap: 6px; min-height: 16px; margin: 10px 0 12px; }
+.chip { padding: 6px 12px; border: 0; border-radius: 8px; background: var(--line); font-size: 14px; }
+
+.item { transition: color 0.2s; }
+.item[aria-pressed='true'] { color: var(--muted); text-decoration: line-through; }
+.clear { font-size: 14px; }
