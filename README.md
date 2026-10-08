@@ -5,7 +5,8 @@ A shared shopping list, built as an installable web app for phones. Add an item 
 ## Stack
 
 - React 19, Vite and TypeScript, with React Router
-- [Firebase](https://firebase.google.com): Firestore for sync and the offline cache, anonymous Auth, Hosting
+- [Firebase](https://firebase.google.com): Firestore for sync and the offline cache, anonymous Auth
+- [Vercel](https://vercel.com) for hosting
 - `vite-plugin-pwa` for the service worker, manifest and app icons
 - Vitest and Testing Library
 
@@ -25,6 +26,10 @@ How it fits together is described in [docs/architecture.md](docs/architecture.md
 | `npm run build` | Type-check and build into `dist/` |
 | `npm run preview` | Serve the production build |
 | `npm test` | Unit tests |
-| `npm run deploy` | Build, then deploy hosting and Firestore rules |
+| `npm run rules:deploy` | Deploy `firestore.rules` to Firebase |
 
-The Firebase CLI runs through `npx --engine-strict=false firebase-tools`. Its `superstatic` dependency declares support only up to Node 24.
+## Deploy
+
+Vercel builds and deploys every push to `main`, and builds a preview for every pull request. The `VITE_FIREBASE_*` variables from `.env` must also be set in the Vercel project.
+
+Firestore rules are not part of the Vercel build; deploy them with `npm run rules:deploy`. The Firebase CLI runs through `npx --engine-strict=false firebase-tools`. Its `superstatic` dependency declares support only up to Node 24.
