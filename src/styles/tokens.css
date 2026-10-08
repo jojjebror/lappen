@@ -22,6 +22,7 @@
   --muted: #5d646e;
   --accent: #157a3c;
   --on-accent: #ffffff;
+  --danger: #c2261c;
   color-scheme: light;
 }
 
@@ -34,5 +35,6 @@
   --muted: #8b929c;
   --accent: #4fd486;
   --on-accent: #0d0f12;
+  --danger: #ff6b5e;
   color-scheme: dark;
 }

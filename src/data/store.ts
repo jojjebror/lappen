@@ -117,5 +117,13 @@ export function clearChecked(listId: string, all: Item[]) {
   batch.commit().catch(fail)
 }
 
+export async function deleteList(listId: string) {
+  const batch = writeBatch(db)
+  const subs = await Promise.all([getDocs(items(listId)), getDocs(history(listId))])
+  subs.flatMap((s) => s.docs).forEach((d) => batch.delete(d.ref))
+  batch.delete(doc(lists, listId))
+  return batch.commit().catch(fail)
+}
+
 export const rememberList = (listId: string) => writeStored(LAST_LIST_STORAGE_KEY, listId)
 export const lastListId = () => readStored<string | undefined>(LAST_LIST_STORAGE_KEY, undefined)

@@ -73,6 +73,11 @@
   text-transform: uppercase;
 }
 .solid-button:disabled { opacity: 0.5; }
+.danger { --accent: var(--danger); }
+.delete-list { margin-top: 24px; }
+.confirm { margin-top: 24px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.confirm-actions .outline-button { padding: 12px 16px; font-size: 15px; }
 .badge {
   padding: 3px 7px;
   border-radius: 10px;

@@ -66,5 +66,9 @@ export const LABELS = {
   join: 'Gå med',
   joinGone: 'Inbjudan gäller inte längre.',
   listMissing: 'Listan finns inte i ert hushåll.',
+  deleteList: 'Ta bort listan',
+  deleteListHint: (name: string) => `${name} och alla varor på den försvinner för hela hushållet.`,
+  cancel: 'Avbryt',
+  delete: 'Ta bort',
   about: 'Om Lappen',
 }

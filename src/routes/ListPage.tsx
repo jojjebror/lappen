@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Check, Plus } from 'lucide-react'
+import { Check, Plus, Trash2 } from 'lucide-react'
 import { useParams } from 'react-router'
 import { LABELS, LIST_PARAM, MOTION, SMALL_ICON_SIZE, UNDO_MS } from '../../shared/constants'
 import { AddField } from '../components/AddField'
-import { AppHeader } from '../components/AppHeader'
+import { AppHeader, useBack } from '../components/AppHeader'
 import { HapticButton } from '../components/HapticButton'
 import { sortItems, suggest, type Item } from '../data/items'
-import { addItem, clearChecked, rememberList, setChecked, useHistory, useItems, useLists } from '../data/store'
+import { addItem, clearChecked, deleteList, rememberList, setChecked, useHistory, useItems, useLists } from '../data/store'
 import { useHousehold } from '../household'
 import { useFlip, usePresence } from '../motion'
 
@@ -20,6 +20,8 @@ export function ListPage() {
   const [input, setInput] = useState('')
   const [undo, setUndo] = useState<Item>()
   const [clearing, setClearing] = useState(false)
+  const [confirming, setConfirming] = useState(false)
+  const goBack = useBack()
   const toast = usePresence(undo)
   const sorted = sortItems(items.docs)
   const rows = useFlip<HTMLDivElement>(sorted.map((i) => `${i.id}:${i.checked}`).join())
@@ -49,6 +51,11 @@ export function ListPage() {
       clearChecked(id, items.docs)
       setClearing(false)
     }, MOTION.exitMs)
+  }
+
+  const remove = () => {
+    deleteList(id)
+    goBack()
   }
 
   return (
@@ -85,6 +92,25 @@ export function ListPage() {
             {LABELS.clearChecked}
           </button>
         )}
+        {list &&
+          (confirming ? (
+            <div className="confirm stack-tight reveal">
+              <p className="hint">{LABELS.deleteListHint(list.name)}</p>
+              <div className="confirm-actions">
+                <button className="outline-button" onClick={() => setConfirming(false)}>
+                  {LABELS.cancel}
+                </button>
+                <HapticButton className="solid-button danger" onClick={remove}>
+                  {LABELS.delete}
+                </HapticButton>
+              </div>
+            </div>
+          ) : (
+            <button className="text-button danger delete-list" onClick={() => setConfirming(true)}>
+              <Trash2 size={SMALL_ICON_SIZE} aria-hidden="true" />
+              {LABELS.deleteList}
+            </button>
+          ))}
       </main>
       {toast.shown && (
         <div className={toast.leaving ? 'toast leaving' : 'toast'} key={toast.shown.id} role="status">

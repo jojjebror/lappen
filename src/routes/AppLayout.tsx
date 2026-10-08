@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router'
+import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { BottomNav } from '../components/BottomNav'
 import { HouseholdProvider } from '../household'
 import { usePageSlide } from '../motion'
@@ -13,6 +13,7 @@ export function AppLayout() {
           <Outlet />
         </div>
         <BottomNav />
+        <ScrollRestoration />
       </div>
     </HouseholdProvider>
   )
