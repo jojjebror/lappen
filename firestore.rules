@@ -38,6 +38,7 @@ service cloud.firestore {
       allow read: if signedIn() && canReach(resource.data);
       allow create: if signedIn() && inHousehold(request.resource.data.get('householdId', null));
       allow update: if signedIn() && canReach(resource.data) && inHouseholdAfter(request.resource.data.householdId);
+      allow delete: if signedIn() && inHousehold(resource.data.get('householdId', null));
 
       match /{sub}/{docId} {
         allow read, write: if signedIn() && inHousehold(get(/databases/$(database)/documents/lists/$(listId)).data.get('householdId', null));

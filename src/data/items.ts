@@ -2,7 +2,7 @@ import { LOCALE, MAX_OFTEN, MAX_SUGGESTIONS } from '../../shared/constants'
 
 export type Item = { id: string; name: string; checked: boolean; createdAt: number }
 export type HistoryEntry = { name: string; count: number }
-export type List = { id: string; name: string }
+export type List = { id: string; name: string; synced: boolean }
 export type Household = { id: string; members: string[]; names: Record<string, string> }
 
 export const normalize = (name: string) => name.trim().toLocaleLowerCase(LOCALE)

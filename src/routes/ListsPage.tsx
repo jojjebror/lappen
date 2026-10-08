@@ -10,7 +10,7 @@ import { useHousehold } from '../household'
 import { useFlip } from '../motion'
 
 function ListCard({ list }: { list: List }) {
-  const items = useItems(list.id)
+  const items = useItems(list)
   return (
     <Link to={paths.list(list.id)} className="row list-card" data-key={list.id}>
       <span className="list-card-name">{list.name}</span>

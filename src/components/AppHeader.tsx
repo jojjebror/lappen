@@ -1,18 +1,32 @@
 import { ArrowLeft, Moon, Share2, Sun } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { APP_NAME, ICON_SIZE, LABELS, LOGO_SIZES, THEME_TOGGLE_LABELS, paths } from '../../shared/constants'
 import { useTheme } from '../theme'
 import { HapticButton } from './HapticButton'
 import { LogoMark } from './LogoMark'
 
+export function useBack() {
+  const navigate = useNavigate()
+  const { key } = useLocation()
+  return () => (key === 'default' ? navigate(paths.home, { replace: true }) : navigate(-1))
+}
+
 export function AppHeader({ back, onShare }: { back?: boolean; onShare?: () => void }) {
   const { theme, choose } = useTheme()
   const ThemeIcon = theme === 'dark' ? Sun : Moon
+  const goBack = useBack()
   return (
     <header className="top">
       <div className="bar">
         {back ? (
-          <Link to={paths.home} className="back">
+          <Link
+            to={paths.home}
+            className="back"
+            onClick={(e) => {
+              e.preventDefault()
+              goBack()
+            }}
+          >
             <ArrowLeft size={ICON_SIZE} aria-hidden="true" />
             {LABELS.back}
           </Link>
