@@ -16,8 +16,9 @@ import {
   type Query,
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
-import { COLLECTIONS } from '../../shared/constants'
+import { COLLECTIONS, LAST_LIST_STORAGE_KEY } from '../../shared/constants'
 import { db, uid } from '../firebase'
+import { readStored, writeStored } from '../storage'
 import { historyKey, normalize, type HistoryEntry, type Item, type List } from './items'
 
 const items = (listId: string) => collection(db, COLLECTIONS.lists, listId, COLLECTIONS.items)
@@ -76,3 +77,6 @@ export function clearChecked(listId: string, all: Item[]) {
   all.filter((i) => i.checked).forEach((i) => batch.delete(doc(items(listId), i.id)))
   batch.commit().catch(fail)
 }
+
+export const rememberList = (listId: string) => writeStored(LAST_LIST_STORAGE_KEY, listId)
+export const lastListId = () => readStored<string | undefined>(LAST_LIST_STORAGE_KEY, undefined)

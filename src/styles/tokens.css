@@ -1,28 +1,38 @@
 :root {
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --radius: 12px;
+  --font-display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Archivo Variable', system-ui, sans-serif;
+  --font-score: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  --radius: 4px;
   --gutter: 16px;
-  --max-width: 560px;
+  --max-width: 640px;
+  --nav-height: 64px;
+  --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  --bg: #f4f4f1;
+  --panel: #07080a;
+  --panel-line: #22262d;
+  --panel-text: #eceef1;
+  --panel-muted: #8b929c;
+  --mark: #4fd486;
+
+  --bg: var(--theme-light);
   --surface: #ffffff;
-  --text: #1c1f1d;
-  --muted: #878c88;
-  --line: #e7e8e4;
-  --accent: #2f5245;
+  --surface-2: #e0e3e7;
+  --line: #d3d7dc;
+  --text: #111418;
+  --muted: #5d646e;
+  --accent: #157a3c;
   --on-accent: #ffffff;
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #151617;
-    --surface: #1f2022;
-    --text: #ecebe6;
-    --muted: #8d8b85;
-    --line: #2c2d30;
-    --accent: #8fb8a3;
-    --on-accent: #151617;
-    color-scheme: dark;
-  }
+:root[data-theme='dark'] {
+  --bg: var(--theme-dark);
+  --surface: #16191e;
+  --surface-2: #20242b;
+  --line: #2a2f37;
+  --text: #eceef1;
+  --muted: #8b929c;
+  --accent: #4fd486;
+  --on-accent: #0d0f12;
+  color-scheme: dark;
 }

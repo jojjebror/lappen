@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { MAX_SUGGESTIONS } from '../../shared/constants'
-import { historyKey, sortItems, suggest, type HistoryEntry, type Item } from './items'
+import { MAX_OFTEN, MAX_SUGGESTIONS } from '../../shared/constants'
+import { historyKey, oftenBought, sortItems, suggest, type HistoryEntry, type Item } from './items'
 
 const item = (name: string, checked = false, createdAt = 0): Item => ({ id: name, name, checked, createdAt })
 
@@ -38,5 +38,14 @@ describe('suggest', () => {
     const many = Array.from({ length: MAX_SUGGESTIONS + 3 }, (_, i) => ({ name: `a${i}`, count: i }))
     expect(suggest(history, ' ', [])).toEqual([])
     expect(suggest(many, 'a', [])).toHaveLength(MAX_SUGGESTIONS)
+  })
+})
+
+describe('oftenBought', () => {
+  it('lists the most added first, capped', () => {
+    const many = Array.from({ length: MAX_OFTEN + 2 }, (_, i) => ({ name: `a${i}`, count: i }))
+    const often = oftenBought(many)
+    expect(often).toHaveLength(MAX_OFTEN)
+    expect(often[0].count).toBe(MAX_OFTEN + 1)
   })
 })

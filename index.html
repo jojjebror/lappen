@@ -4,15 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content="%APP_DESCRIPTION%" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="%THEME_LIGHT%" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="%THEME_DARK%" />
+    <meta name="theme-color" content="%THEME_DARK%" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="%APP_NAME%" />
     <title>%APP_NAME%</title>
+    <style>
+      @import '@fontsource/teko/600.css';
+      :root { --theme-light: %THEME_LIGHT%; --theme-dark: %THEME_DARK%; --font-wordmark: 'Teko', 'Arial Narrow', sans-serif; }
+      #%SPLASH_ID% { position: fixed; inset: 0; z-index: 10; display: grid; place-content: center; justify-items: center; gap: 16px; background: var(--theme-dark); }
+      body:has(> #%SPLASH_ID%:not([inert])) { background: var(--theme-dark); }
+      body:has(> #%SPLASH_ID%:not([inert])) > #root { visibility: hidden; }
+      .splash-logo { width: %SPLASH_LOGO_PX%px; height: %SPLASH_LOGO_PX%px; overflow: visible; }
+      .splash-paper { transform-box: fill-box; transform-origin: 50% 100%; animation: splash-glide 520ms 120ms cubic-bezier(0.2, 0.9, 0.25, 1.1) both, splash-stamp 260ms 1040ms ease-out; }
+      .splash-check { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; animation: splash-draw 380ms 680ms cubic-bezier(0.6, 0, 0.4, 1) both; }
+      .splash-name { color: %LOGO_PAPER%; font: 600 38px/1 var(--font-wordmark); letter-spacing: 0.06em; text-transform: uppercase; }
+      .splash-name span { display: inline-block; animation: splash-rise 420ms calc(1250ms + var(--i) * 42ms) %MOTION_EASING% both; }
+      @keyframes splash-glide { from { translate: -460px 0; opacity: 0; } 40% { opacity: 1; } }
+      @keyframes splash-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+      @keyframes splash-stamp { 40% { scale: 0.96 0.94; } }
+      @keyframes splash-rise { from { opacity: 0; translate: 0 0.6em; } }
+      @media (prefers-reduced-motion: reduce) { #%SPLASH_ID% * { animation: none; } }
+    </style>
+    <script>
+      (() => {
+        const colors = { light: '%THEME_LIGHT%', dark: '%THEME_DARK%' }
+        let theme
+        try {
+          const stored = localStorage.getItem('%THEME_STORAGE_KEY%')
+          try { theme = JSON.parse(stored) } catch { theme = stored }
+        } catch {}
+        if (!(theme in colors)) theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = theme
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', colors[theme])
+      })()
+    </script>
   </head>
   <body>
+    <div id="%SPLASH_ID%" aria-hidden="true">%SPLASH_CONTENT%</div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
