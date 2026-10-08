@@ -36,7 +36,7 @@ service cloud.firestore {
 
     match /lists/{listId} {
       allow read: if signedIn() && canReach(resource.data);
-      allow create: if signedIn() && (inHousehold(request.resource.data.get('householdId', null)) || request.resource.data.get('members', []) == [request.auth.uid]);
+      allow create: if signedIn() && inHousehold(request.resource.data.get('householdId', null));
       allow update: if signedIn() && canReach(resource.data) && inHouseholdAfter(request.resource.data.householdId);
 
       match /{sub}/{docId} {
