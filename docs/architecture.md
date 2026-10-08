@@ -15,7 +15,7 @@ phone: React app + service worker
    ▼
 Firestore (europe-north1)    real-time listeners, access checked by firestore.rules
 Firebase Auth                one anonymous user per device
-Firebase Hosting             serves dist/
+Vercel                       builds and serves dist/, previews per pull request
 ```
 
 There is no server code. The browser talks to Firestore directly, and `firestore.rules` decides what each user may read and write.
