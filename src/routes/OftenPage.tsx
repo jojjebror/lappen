@@ -11,8 +11,8 @@ export function OftenPage() {
   const lists = useLists(household?.id)
   const remembered = lastListId()
   const target = lists.docs.find((l) => l.id === remembered) ?? lists.docs[0]
-  const items = useItems(target?.id)
-  const history = useHistory(target?.id)
+  const items = useItems(target)
+  const history = useHistory(target)
   const onList = onListNames(items.docs)
 
   return (

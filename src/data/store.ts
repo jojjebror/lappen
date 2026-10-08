@@ -32,11 +32,11 @@ const history = (listId: string) => collection(db, COLLECTIONS.lists, listId, CO
 
 const fail = (e: unknown) => console.error(e)
 
-function useLive<T>(key: string | undefined, build: (key: string) => Query, map: (d: QueryDocumentSnapshot<DocumentData>) => T) {
+function useLive<T>(key: string | undefined, build: (key: string) => Query, map: (d: QueryDocumentSnapshot<DocumentData>) => T, includeMetadataChanges = false) {
   const [state, setState] = useState<{ key?: string; docs: T[] }>({ docs: [] })
   useEffect(() => {
     if (!key) return
-    return onSnapshot(build(key), (s) => setState({ key, docs: s.docs.map(map) }), fail)
+    return onSnapshot(build(key), { includeMetadataChanges }, (s) => setState({ key, docs: s.docs.map(map) }), fail)
   }, [key])
   return { docs: state.key === key ? state.docs : [], loading: state.key !== key }
 }
@@ -60,16 +60,18 @@ export const useHouseholds = () =>
 export const useHouseholdById = (householdId?: string) => useLiveDoc(householdId, household, (data) => data as Pick<Household, 'members' | 'names'>)
 
 export const useLists = (householdId?: string) =>
-  useLive(householdId, (id) => query(lists, where('householdId', '==', id)), (d): List => ({ id: d.id, name: d.data().name }))
+  useLive(householdId, (id) => query(lists, where('householdId', '==', id)), (d): List => ({ id: d.id, name: d.data().name, synced: !d.metadata.hasPendingWrites }), true)
 
-export const useItems = (listId?: string) =>
-  useLive(listId, items, (d): Item => {
+const syncedId = (list?: List) => (list?.synced ? list.id : undefined)
+
+export const useItems = (list?: List) =>
+  useLive(syncedId(list), items, (d): Item => {
     const data = d.data({ serverTimestamps: 'estimate' })
     return { id: d.id, name: data.name, checked: data.checked, createdAt: data.createdAt?.toMillis() ?? 0 }
   })
 
-export const useHistory = (listId?: string) =>
-  useLive(listId, history, (d): HistoryEntry => ({ name: d.data().name, count: d.data().count }))
+export const useHistory = (list?: List) =>
+  useLive(syncedId(list), history, (d): HistoryEntry => ({ name: d.data().name, count: d.data().count }))
 
 export function createHousehold(member: string) {
   const ref = doc(households)
