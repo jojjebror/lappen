@@ -1,11 +1,22 @@
 import type { RouteObject } from 'react-router'
 import { paths, routePatterns } from '../shared/constants'
-import { HomePage } from './routes/HomePage'
+import { AppLayout } from './routes/AppLayout'
 import { ListPage } from './routes/ListPage'
+import { ListsPage } from './routes/ListsPage'
 import { NotFound } from './routes/NotFound'
+import { OftenPage } from './routes/OftenPage'
+import { SettingsPage } from './routes/SettingsPage'
 
 export const routes: RouteObject[] = [
-  { path: paths.home, element: <HomePage /> },
-  { path: routePatterns.list, element: <ListPage /> },
-  { path: '*', element: <NotFound /> },
+  {
+    path: paths.home,
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <ListsPage /> },
+      { path: routePatterns.list, element: <ListPage /> },
+      { path: routePatterns.often, element: <OftenPage /> },
+      { path: routePatterns.settings, element: <SettingsPage /> },
+      { path: '*', element: <NotFound /> },
+    ],
+  },
 ]

@@ -1,0 +1,121 @@
+.cards { display: grid; gap: 8px; }
+.rows { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+.rows > .row + .row { border-top: 1px solid var(--line); }
+.row-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.row-count { color: var(--muted); font: 600 12.5px/1 var(--font-score); font-variant-numeric: tabular-nums; }
+.row-chevron { color: var(--accent); }
+
+.list-card { padding-block: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.list-card-name { flex: 1; min-width: 0; font: 600 16px/1.15 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+
+.check-box {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--muted);
+  border-radius: 3px;
+  color: var(--on-accent);
+}
+.item[aria-pressed='true'] { color: var(--muted); }
+.item[aria-pressed='true'] .row-name { text-decoration: line-through; }
+.item[aria-pressed='true'] .check-box { border-color: var(--accent); background: var(--accent); }
+
+.add {
+  display: flex;
+  gap: 6px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.add:focus-within { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.add input { flex: 1; min-width: 0; padding: 9px 11px; border: 0; background: none; outline: none; font: 500 16px/1.2 var(--font-body); }
+.add input::placeholder { color: var(--muted); }
+.add-button { display: grid; place-items: center; width: 38px; border: 0; border-radius: var(--radius); background: var(--accent); color: var(--on-accent); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips:empty { display: none; }
+.chip, .outline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: none;
+  color: var(--accent);
+  font: 600 12.5px/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.outline-button { align-self: flex-start; }
+
+.round-add {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  background: none;
+  color: var(--accent);
+}
+.round-add[aria-pressed='true'] { background: var(--accent); color: var(--on-accent); cursor: default; }
+
+.segmented { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 3px; border-radius: calc(var(--radius) + 3px); background: var(--surface-2); }
+.segmented::before {
+  content: '';
+  position: absolute;
+  inset-block: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--segments));
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--panel) 30%, transparent);
+  transform: translateX(calc(var(--segment) * 100%));
+}
+.segmented > * {
+  position: relative;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--muted);
+  font: 600 11.5px/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.segmented > [aria-pressed='true'] { color: var(--accent); }
+
+.toast {
+  position: fixed;
+  inset-inline: max(var(--gutter), env(safe-area-inset-left));
+  bottom: calc(var(--nav-height) + 12px + env(safe-area-inset-bottom));
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: calc(var(--max-width) - 2 * var(--gutter));
+  margin-inline: auto;
+  padding: 8px 8px 8px 14px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--panel-text);
+  box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.6);
+}
+.toast .text-button { padding: 6px; color: var(--mark); }
+

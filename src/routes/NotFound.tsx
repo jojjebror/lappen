@@ -1,13 +1,17 @@
 import { Link } from 'react-router'
 import { LABELS, paths } from '../../shared/constants'
+import { AppHeader } from '../components/AppHeader'
 
 export function NotFound() {
   return (
-    <main className="page">
-      <p className="hint">{LABELS.notFound}</p>
-      <Link to={paths.home} className="link">
-        {LABELS.goHome}
-      </Link>
-    </main>
+    <>
+      <AppHeader />
+      <main className="body stack-tight">
+        <p className="hint">{LABELS.notFound}</p>
+        <Link to={paths.home} className="text-button">
+          {LABELS.goHome}
+        </Link>
+      </main>
+    </>
   )
 }
