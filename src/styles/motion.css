@@ -1,10 +1,23 @@
 .reveal { animation: reveal 220ms ease-out; }
 @keyframes reveal { from { opacity: 0; transform: translateY(6px); } }
 
-.back, .text-button, .icon-button, .chip, .outline-button, .add-button, .round-add, .list-card, .wordmark, .nav-tab, .segmented > *, .row {
+.back, .text-button, .icon-button, .chip, .outline-button, .solid-button, .add-button, .round-add, .list-card, .wordmark, .nav-tab, .segmented > *, .row, .add {
   transition: transform 120ms ease-out, color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
-:is(.back, .text-button, .icon-button, .chip, .outline-button, .add-button, .round-add:enabled, .list-card, .wordmark):active { transform: scale(0.95); }
+:is(.back, .text-button, .icon-button, .chip, .outline-button:enabled, .solid-button:enabled, .add-button, .round-add:enabled, .list-card, .wordmark):active { transform: scale(0.95); }
+.nav-tab:active svg { transform: scale(0.88); }
+.nav-tab svg { transition: transform 120ms ease-out; }
+.row-name { transition: color 200ms ease; }
+
+.leaving.row { animation: row-out 200ms ease-in forwards; }
+@keyframes row-out { to { opacity: 0; transform: translateX(24px); } }
+
+.toast { animation: toast-in 240ms var(--easing); }
+.toast.leaving { animation: toast-out 200ms ease-in forwards; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(12px); } }
+
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 240ms; animation-timing-function: ease; }
 .item:active { background: var(--surface-2); }
 .check-box { transition: background-color 160ms ease, border-color 160ms ease; }
 
@@ -25,6 +38,6 @@
 .segmented::before { transition: transform 240ms var(--easing); }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal { animation: none; }
-  .segmented::before { transition: none; }
+  .reveal, .toast, .toast.leaving, .leaving.row { animation: none; }
+  .segmented::before, .bottom-nav::before { transition: none; }
 }

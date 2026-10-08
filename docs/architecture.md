@@ -31,15 +31,19 @@ There is no server code. The browser talks to Firestore directly, and `firestore
 ## Data model
 
 ```
-lists/{listId}                 { name, members: [uid], createdAt }
+households/{householdId}       { members: [uid], names: { uid: name }, createdAt }
+lists/{listId}                 { name, householdId, createdAt }
 lists/{listId}/items/{itemId}  { name, checked, createdAt }
 lists/{listId}/history/{key}   { name, count }
 ```
 
+Lists created before households existed have `members: [uid]` instead of `householdId`. The app moves them into the owner's household on start.
+
 ## Decisions
 
 1. **Anonymous auth instead of accounts.** Each device signs in anonymously on first launch, and the session is kept. Firebase can later link an anonymous user to an email or Google account without losing data.
-2. **Sharing by link.** A list's `members` array holds the user IDs that can see it. Opening a list link adds the current user to it. The rules allow that one change only: a user may add themself, and nothing else.
+2. **Households instead of shared lists.** Everyone in a household sees all its lists. A household is created on first start. The invite link carries the household ID, which is the secret, and joining moves the joiner's own lists into the new household and takes them out of their old one, all in one batch. The rules let a non-member change a household in one way only: add themself to `members`. Members may also remove themself and set names.
 3. **Writes are never awaited.** Firestore applies a write to its local cache and fires listeners at once, then syncs in the background. The UI only reads from listeners, so it updates immediately, offline included.
-4. **Item listeners wait for membership.** A listener that is refused by the rules stops for good. The list page therefore only listens to items once the list shows up among the user's lists, and joins first if it does not.
+4. **Item listeners wait for membership.** A listener that is refused by the rules stops for good. The list page therefore only listens to items once the list shows up among the household's lists.
 5. **Suggestions are per list.** Every added item increments a counter in the list's `history`, keyed by its normalised name. Suggestions are prefix matches ordered by that count, leaving out items already on the list.
+6. **Motion follows Crosscheck.** Pages slide in from the side they are reached from, rows glide to their new place with a FLIP animation when an item is ticked, removed rows and the undo bar fade out before they unmount, and a theme change crossfades with a view transition. All of it is skipped when the phone asks for reduced motion.

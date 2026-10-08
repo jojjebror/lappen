@@ -5,22 +5,42 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function isMember(listId) {
-      return request.auth.uid in get(/databases/$(database)/documents/lists/$(listId)).data.members;
+    function inHousehold(householdId) {
+      return householdId is string && request.auth.uid in get(/databases/$(database)/documents/households/$(householdId)).data.members;
+    }
+
+    function inHouseholdAfter(householdId) {
+      return householdId is string && request.auth.uid in getAfter(/databases/$(database)/documents/households/$(householdId)).data.members;
+    }
+
+    function canReach(list) {
+      return inHousehold(list.get('householdId', null)) || request.auth.uid in list.get('members', []);
+    }
+
+    function changes(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    match /households/{householdId} {
+      allow get: if signedIn();
+      allow list: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn() && request.resource.data.members == [request.auth.uid];
+      allow update: if signedIn() && (
+        (request.auth.uid in resource.data.members && changes(['names'])) ||
+        (!(request.auth.uid in resource.data.members) && changes(['members']) &&
+          request.resource.data.members.toSet() == resource.data.members.toSet().union([request.auth.uid].toSet())) ||
+        (request.auth.uid in resource.data.members && changes(['members']) &&
+          request.resource.data.members.toSet() == resource.data.members.toSet().difference([request.auth.uid].toSet()))
+      );
     }
 
     match /lists/{listId} {
-      allow read: if signedIn() && request.auth.uid in resource.data.members;
-      allow create: if signedIn() && request.resource.data.members == [request.auth.uid];
-      allow update: if signedIn() && (
-        request.auth.uid in resource.data.members ||
-        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
-          request.resource.data.members.toSet().difference(resource.data.members.toSet()) == [request.auth.uid].toSet() &&
-          resource.data.members.toSet().difference(request.resource.data.members.toSet()).size() == 0)
-      );
+      allow read: if signedIn() && canReach(resource.data);
+      allow create: if signedIn() && (inHousehold(request.resource.data.get('householdId', null)) || request.resource.data.get('members', []) == [request.auth.uid]);
+      allow update: if signedIn() && canReach(resource.data) && inHouseholdAfter(request.resource.data.householdId);
 
       match /{sub}/{docId} {
-        allow read, write: if signedIn() && isMember(listId);
+        allow read, write: if signedIn() && inHousehold(get(/databases/$(database)/documents/lists/$(listId)).data.get('householdId', null));
       }
     }
   }
