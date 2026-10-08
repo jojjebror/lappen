@@ -1,6 +1,8 @@
+import type { CSSProperties } from 'react'
 import { ListChecks, Settings, Star } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { NAV_ICON_SIZE, NAV_LABELS, paths } from '../../shared/constants'
+import { HapticButton } from './HapticButton'
 
 const TABS = [
   { to: paths.home, Icon: ListChecks, label: NAV_LABELS.lists, match: (path: string) => path === paths.home || path.startsWith(paths.list('')) },
@@ -10,13 +12,15 @@ const TABS = [
 
 export function BottomNav() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const active = TABS.findIndex((tab) => tab.match(pathname))
   return (
-    <nav className="bottom-nav" aria-label={NAV_LABELS.main}>
-      {TABS.map(({ to, Icon, label, match }) => (
-        <Link key={to} to={to} className="nav-tab" aria-current={match(pathname) ? 'page' : undefined}>
+    <nav className="bottom-nav" aria-label={NAV_LABELS.main} data-active={active >= 0 || undefined} style={{ '--segments': TABS.length, '--segment': Math.max(active, 0) } as CSSProperties}>
+      {TABS.map(({ to, Icon, label }, i) => (
+        <HapticButton key={to} className="nav-tab" aria-current={i === active ? 'page' : undefined} onClick={() => navigate(to)}>
           <Icon size={NAV_ICON_SIZE} aria-hidden="true" />
           {label}
-        </Link>
+        </HapticButton>
       ))}
     </nav>
   )

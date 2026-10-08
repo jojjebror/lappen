@@ -3,6 +3,7 @@ import { LOCALE, MAX_OFTEN, MAX_SUGGESTIONS } from '../../shared/constants'
 export type Item = { id: string; name: string; checked: boolean; createdAt: number }
 export type HistoryEntry = { name: string; count: number }
 export type List = { id: string; name: string }
+export type Household = { id: string; members: string[]; names: Record<string, string> }
 
 export const normalize = (name: string) => name.trim().toLocaleLowerCase(LOCALE)
 
@@ -24,3 +25,5 @@ export function suggest(history: HistoryEntry[], input: string, items: Item[]) {
 export const onListNames = (items: Item[]) => new Set(items.filter((i) => !i.checked).map((i) => normalize(i.name)))
 
 export const oftenBought = (history: HistoryEntry[]) => history.toSorted((a, b) => b.count - a.count).slice(0, MAX_OFTEN)
+
+export const primaryHousehold = (households: Household[]) => households.toSorted((a, b) => b.members.length - a.members.length || a.id.localeCompare(b.id))[0]

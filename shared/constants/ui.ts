@@ -1,18 +1,21 @@
 import type { Theme } from './app.ts'
 
 export const LIST_PARAM = 'listId'
+export const HOUSEHOLD_PARAM = 'householdId'
 
 export const paths = {
   home: '/',
   list: (id: string) => `/list/${id}`,
   often: '/often',
   settings: '/settings',
+  join: (id: string) => `/join/${id}`,
 }
 
 export const routePatterns = {
   list: `list/:${LIST_PARAM}`,
   often: 'often',
   settings: 'settings',
+  join: `join/:${HOUSEHOLD_PARAM}`,
 }
 
 export const ICON_SIZE = 18
@@ -22,7 +25,7 @@ export const LOGO_SIZES = { wordmark: 36 }
 export const HAPTIC_VIBRATE_MS = 10
 export const UNDO_MS = 4000
 export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
-export const MOTION = { easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+export const MOTION = { easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', page: { durationMs: 240, shiftPx: 28 }, moveMs: 260, exitMs: 200 }
 export const SPLASH = { id: 'splash', showMs: 2000, fadeMs: 300, logoPx: 112 }
 
 export const NAV_LABELS = { main: 'Huvudmeny', lists: 'Listor', often: 'Ofta köpt', settings: 'Inställningar' }
@@ -47,5 +50,21 @@ export const LABELS = {
   oftenEmpty: 'Här hamnar det ni lägger till ofta. Börja med att skapa en lista.',
   oftenAdd: (name: string) => `Lägg till ${name}`,
   appearance: 'Utseende',
+  household: 'Hushåll',
+  yourName: 'Ditt namn',
+  namePlaceholder: 'Vad ska de andra se?',
+  you: 'Du',
+  unnamed: 'Utan namn',
+  invite: 'Bjud in',
+  copied: 'Länken är kopierad',
+  inviteHint: 'Alla i hushållet ser och ändrar samma listor.',
+  inviteTitle: 'Lappen',
+  inviteText: 'Gå med i vårt hushåll i Lappen',
+  joinTitle: 'Gå med i hushållet',
+  joinHint: (names: string) => (names ? `${names} har bjudit in dig.` : 'Du har blivit inbjuden.'),
+  joinMoves: 'Ni delar sedan alla listor, och dina listor följer med.',
+  join: 'Gå med',
+  joinGone: 'Inbjudan gäller inte längre.',
+  listMissing: 'Listan finns inte i ert hushåll.',
   about: 'Om Lappen',
 }
