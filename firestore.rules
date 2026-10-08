@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(listId) {
+      return request.auth.uid in get(/databases/$(database)/documents/lists/$(listId)).data.members;
+    }
+
+    match /lists/{listId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.members;
+      allow create: if signedIn() && request.resource.data.members == [request.auth.uid];
+      allow update: if signedIn() && (
+        request.auth.uid in resource.data.members ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
+          request.resource.data.members.toSet().difference(resource.data.members.toSet()) == [request.auth.uid].toSet() &&
+          resource.data.members.toSet().difference(request.resource.data.members.toSet()).size() == 0)
+      );
+
+      match /{sub}/{docId} {
+        allow read, write: if signedIn() && isMember(listId);
+      }
+    }
+  }
+}
